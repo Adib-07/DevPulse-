@@ -1,0 +1,29 @@
+
+{
+  "source": "Mock GitHub Data",
+  "pull_requests": [
+    {
+      "id": 201,
+      "title": "Fix login authentication bug",
+      "author": "Alex",
+      "status": "Open",
+      "review_status": "Approved",
+      "checks": {
+        "tests": "Passing",
+        "build": "Passing"
+      }
+    },
+    {
+      "id": 202,
+      "title": "Optimize dashboard API",
+      "author": "Alex",
+      "status": "Open",
+      "review_status": "Changes requested",
+      "checks": {
+        "tests": "Failing",
+        "build": "Passing"
+      },
+      "failure_reason": "3 unit tests failed"
+    }
+  ]
+}
