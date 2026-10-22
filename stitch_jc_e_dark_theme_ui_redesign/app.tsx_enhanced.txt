@@ -1,0 +1,191 @@
+import { useState, useCallback, useRef } from 'react';
+import type { DashboardState, VoiceInteraction, CommandAction } from './types';
+import { initialSystemMetrics } from './data/mockData';
+import { processCommand, generateCommandResult, simulateProcessingDelay } from './engine/commandEngine';
+import { TopNav } from './components/TopNav';
+import { VoiceLinkFeed } from './components/VoiceLinkFeed';
+import { SprintCriticals } from './components/SprintCriticals';
+import { GitPulse } from './components/GitPulse';
+import { OpsSentinel } from './components/OpsSentinel';
+import { FloatingCommandConsole } from './components/FloatingCommandConsole';
+import { Icons } from './components/Icons';
+
+const INITIAL_STATE: DashboardState = {
+  tasks: [],
+  tasksLoading: false,
+  repository: null,
+  repositoryLoading: false,
+  systemMetrics: initialSystemMetrics,
+  voiceHistory: [],
+  isProcessing: false,
+  connectionStatus: 'connected',
+};
+
+function generateId(): string {
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+}
+
+export default function App() {
+  const [state, setState] = useState<DashboardState>(INITIAL_STATE);
+  const [waveformLevel, setWaveformLevel] = useState(0);
+  const waveformIntervalRef = useRef<number | null>(null);
+
+  const startWaveform = useCallback(() => {
+    if (waveformIntervalRef.current) return;
+    waveformIntervalRef.current = window.setInterval(() => {
+      setWaveformLevel(0.3 + Math.random() * 0.7);
+    }, 80);
+  }, []);
+
+  const stopWaveform = useCallback(() => {
+    if (waveformIntervalRef.current) {
+      clearInterval(waveformIntervalRef.current);
+      waveformIntervalRef.current = null;
+    }
+    setWaveformLevel(0);
+  }, []);
+
+  const addVoiceInteraction = useCallback((
+    userCommand: string,
+    assistantResponse: string,
+    action: CommandAction,
+    processing: boolean = false
+  ) => {
+    const interaction: VoiceInteraction = {
+      id: generateId(),
+      timestamp: new Date(),
+      userCommand,
+      assistantResponse,
+      action,
+      processing,
+    };
+    setState((prev) => ({
+      ...prev,
+      voiceHistory: [...prev.voiceHistory, interaction],
+    }));
+    return interaction.id;
+  }, []);
+
+  const updateVoiceInteraction = useCallback((id: string, updates: Partial<VoiceInteraction>) => {
+    setState((prev) => ({
+      ...prev,
+      voiceHistory: prev.voiceHistory.map((i) =>
+        i.id === id ? { ...i, ...updates } : i
+      ),
+    }));
+  }, []);
+
+  const handleCommandSubmit = useCallback(async (command: string) => {
+    if (state.isProcessing) return;
+
+    setState((prev) => ({ ...prev, isProcessing: true }));
+    startWaveform();
+
+    const interactionId = addVoiceInteraction(command, '', 'UNKNOWN', true);
+
+    try {
+      const processed = processCommand(command);
+      await simulateProcessingDelay();
+
+      const result = generateCommandResult(processed);
+
+      updateVoiceInteraction(interactionId, {
+        assistantResponse: result.response,
+        action: result.action,
+        processing: false,
+      });
+
+      if (result.success && result.data) {
+        setState((prev) => {
+          const nextState = { ...prev };
+          const data = result.data!;
+
+          if (result.action === 'FETCH_TASKS' && data.tasks) {
+            nextState.tasks = data.tasks;
+            nextState.tasksLoading = false;
+          } else if (result.action === 'CHECK_REPO_STATUS' && data.repository) {
+            nextState.repository = data.repository;
+            nextState.repositoryLoading = false;
+          } else if (result.action === 'RUN_GUARDRAIL_CHECK' && data.systemMetrics) {
+            nextState.systemMetrics = {
+              ...prev.systemMetrics,
+              ...data.systemMetrics,
+            };
+          }
+
+          return nextState;
+        });
+      }
+    } catch (error) {
+      updateVoiceInteraction(interactionId, {
+        assistantResponse: 'An unexpected error occurred during command processing. Please try again.',
+        action: 'UNKNOWN',
+        processing: false,
+      });
+    } finally {
+      setState((prev) => ({ ...prev, isProcessing: false }));
+      stopWaveform();
+    }
+  }, [state.isProcessing, addVoiceInteraction, updateVoiceInteraction, startWaveform, stopWaveform]);
+
+  const handleReset = useCallback(() => {
+    stopWaveform();
+    setState(INITIAL_STATE);
+  }, [stopWaveform]);
+
+  return (
+    <div className="relative min-h-screen bg-[var(--color-bg-deep)] text-[var(--color-text-primary)] antialiased selection:bg-[var(--color-indigo)]/30 selection:text-white">
+      {/* Subtle top ambient glow for depth and premium hierarchy */}
+      <div 
+        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[340px] opacity-35 blur-[120px] bg-gradient-to-b from-[var(--color-indigo)]/30 via-[var(--color-violet)]/10 to-transparent" 
+        aria-hidden="true" 
+      />
+
+      {/* Top Navigation */}
+      <TopNav connectionStatus={state.connectionStatus} />
+
+      {/* Main Content Workspace */}
+      <main className="relative z-1 mx-auto max-w-[1400px] px-4 py-5 sm:px-6 sm:py-8 pb-44 transition-all duration-300">
+        <VoiceLinkFeed
+          interactions={state.voiceHistory}
+          isProcessing={state.isProcessing}
+          currentWaveformLevel={waveformLevel}
+        />
+
+        {/* Triple Grid Cards for Sprint Criticals, Git Pulse, Ops Sentinel */}
+        <div className="mt-8 grid gap-5 sm:grid-cols-3">
+          <SprintCriticals tasks={state.tasks} loading={state.tasksLoading} />
+          <GitPulse repository={state.repository} loading={state.repositoryLoading} />
+          <OpsSentinel metrics={state.systemMetrics} />
+        </div>
+      </main>
+
+      {/* Floating Command Console */}
+      <FloatingCommandConsole
+        onSubmit={handleCommandSubmit}
+        onReset={handleReset}
+        isProcessing={state.isProcessing}
+      />
+
+      {/* Polished Glassmorphism Footer */}
+      <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-[var(--color-border-subtle)] bg-[var(--color-bg-deep)]/85 backdrop-blur-xl px-4 py-2.5 sm:px-6">
+        <div className="mx-auto max-w-[1400px] flex items-center justify-between gap-4 text-[11px] font-medium text-[var(--color-text-muted)]">
+          <div className="flex items-center gap-2">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-neon-green)] animate-pulse" />
+            <span>DevPulse Portal · JC&E · All systems operational</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-lavender)]" aria-hidden="true">
+              <Icons.mic size={12} className="text-[var(--color-lavender)]" />
+              <span>Voice Ready</span>
+            </span>
+            <span className="flex items-center gap-1.5 text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-neon-green)]" aria-hidden="true">
+              <Icons.link size={12} className="text-[var(--color-neon-green)]" />
+              <span>MCP Protocol</span>
+            </span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
