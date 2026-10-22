@@ -1,0 +1,40 @@
+
+{
+  "source": "Mock Monitoring Data",
+  "server": "devpulse-api-01",
+  "services": [
+    {
+      "name": "API Server",
+      "status": "Healthy",
+      "cpu_usage_percent": 35,
+      "memory_usage_percent": 58,
+      "response_time_ms": 120
+    },
+    {
+      "name": "Database",
+      "status": "Warning",
+      "cpu_usage_percent": 82,
+      "memory_usage_percent": 76,
+      "response_time_ms": 640
+    },
+    {
+      "name": "Authentication Service",
+      "status": "Healthy",
+      "cpu_usage_percent": 28,
+      "memory_usage_percent": 41,
+      "response_time_ms": 95
+    }
+  ],
+  "active_alerts": [
+    {
+      "id": "ALT-301",
+      "severity": "Warning",
+      "message": "Database CPU usage is above 80 percent."
+    },
+    {
+      "id": "ALT-302",
+      "severity": "Critical",
+      "message": "Unit tests are failing in PR 202."
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+
+{
+  "developer": "Alex",
+  "source": "Mock Jira Data",
+  "tasks": [
+    {
+      "id": "BUG-101",
+      "title": "Login fails for valid users",
+      "priority": "High",
+      "status": "Open",
+      "assignee": "Alex",
+      "description": "Users cannot log in despite entering the correct password."
+    },
+    {
+      "id": "BUG-102",
+      "title": "Dashboard API returns error",
+      "priority": "High",
+      "status": "In Progress",
+      "assignee": "Alex",
+      "description": "Dashboard API fails for some users."
+    },
+    {
+      "id": "BUG-103",
+      "title": "Password reset email not delivered",
+      "priority": "Medium",
+      "status": "Open",
+      "assignee": "Alex",
+      "description": "Some users are not receiving password reset emails."
+    }
+  ]
+}
