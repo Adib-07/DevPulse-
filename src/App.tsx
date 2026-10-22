@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Mic, Radio } from 'lucide-react';
 import { TopNav } from '@/components/TopNav';
 import { VoiceLinkFeed } from '@/components/VoiceLinkFeed';
 import { SprintCriticals } from '@/components/SprintCriticals';
@@ -24,6 +25,7 @@ function App() {
   const [connection, setConnection] = useState<ConnectionState>('connecting');
   const [interactions, setInteractions] = useState<VoiceInteraction[]>([]);
   const [processing, setProcessing] = useState(false);
+  const [waveformLevel, setWaveformLevel] = useState(0);
   const [tasks, setTasks] = useState<TaskTicket[]>(NO_TASKS);
   const [tasksLoaded, setTasksLoaded] = useState(false);
   const [repo, setRepo] = useState<RepoState>(EMPTY_REPO);
@@ -32,8 +34,24 @@ function App() {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const timer = useRef<number | null>(null);
+  const waveformIntervalRef = useRef<number | null>(null);
   const interactionsRef = useRef<VoiceInteraction[]>([]);
   interactionsRef.current = interactions;
+
+  const startWaveform = useCallback(() => {
+    if (waveformIntervalRef.current) return;
+    waveformIntervalRef.current = window.setInterval(() => {
+      setWaveformLevel(0.3 + Math.random() * 0.7);
+    }, 80);
+  }, []);
+
+  const stopWaveform = useCallback(() => {
+    if (waveformIntervalRef.current) {
+      clearInterval(waveformIntervalRef.current);
+      waveformIntervalRef.current = null;
+    }
+    setWaveformLevel(0);
+  }, []);
 
   // Load persisted history + replay dashboard state on mount.
   useEffect(() => {
@@ -63,6 +81,9 @@ function App() {
     return () => {
       cancelled = true;
       window.clearTimeout(timer.current ?? undefined);
+      if (waveformIntervalRef.current) {
+        clearInterval(waveformIntervalRef.current);
+      }
     };
   }, []);
 
@@ -74,6 +95,7 @@ function App() {
 
       setProcessing(true);
       setJustSecured(false);
+      startWaveform();
 
       window.clearTimeout(timer.current ?? undefined);
       timer.current = window.setTimeout(() => {
@@ -102,6 +124,7 @@ function App() {
         }
 
         setProcessing(false);
+        stopWaveform();
 
         // Best-effort persistence — a failure shouldn't break the live demo.
         void saveInteraction(interaction).catch((err) => {
@@ -109,12 +132,13 @@ function App() {
         });
       }, 750);
     },
-    [processing],
+    [processing, startWaveform, stopWaveform],
   );
 
   const handleReset = useCallback(() => {
     if (processing) return;
     window.clearTimeout(timer.current ?? undefined);
+    stopWaveform();
     setInteractions([]);
     setProcessing(false);
     setTasks(NO_TASKS);
@@ -126,35 +150,67 @@ function App() {
     void clearHistory().catch((err) => {
       console.error('Failed to clear history:', err);
     });
-  }, [processing]);
+  }, [processing, stopWaveform]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-ink-base">
-      <TopNav connection={connection} />
+    <div className="relative min-h-screen flex flex-col bg-[#090A0F] text-[#F8FAFC] antialiased selection:bg-lavender/30 selection:text-white">
+      {/* Subtle top ambient glow for depth and premium hierarchy */}
+      <div
+        className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[340px] opacity-35 blur-[120px] bg-gradient-to-b from-indigo/30 via-violet/10 to-transparent"
+        aria-hidden="true"
+      />
 
-      <main className="flex-1 mx-auto w-full max-w-[1400px] px-4 sm:px-6 py-5 space-y-5 pb-32">
+      {/* Top Navigation */}
+      <TopNav connectionStatus={connection} />
+
+      {/* Main Content Workspace */}
+      <main className="relative z-1 flex-1 mx-auto w-full max-w-[1400px] px-4 sm:px-6 py-5 sm:py-8 space-y-6 pb-44 transition-all duration-300">
         {loadError && (
-          <div className="rounded-xl border border-neon-amber/30 bg-neon-amber/10 px-4 py-3 text-sm text-neon-amber">
+          <div className="rounded-xl border border-neon-amber/30 bg-neon-amber/10 px-4 py-3 text-sm text-neon-amber font-mono">
             Couldn’t load saved history ({loadError}). The demo will continue with an empty state.
           </div>
         )}
 
-        <VoiceLinkFeed interactions={interactions} processing={processing} />
+        {/* Voice Link Feed with live audio simulation */}
+        <VoiceLinkFeed
+          interactions={interactions}
+          isProcessing={processing}
+          currentWaveformLevel={waveformLevel}
+        />
 
+        {/* Triple Grid Cards for Sprint Criticals, Git Pulse, Ops Sentinel */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <SprintCriticals tasks={tasks} loaded={tasksLoaded} />
           <GitPulse repo={repo} />
           <OpsSentinel ops={ops} justSecured={justSecured} />
         </div>
-
-        <footer className="pt-2 pb-1 text-center text-[11px] text-slate-600 font-mono">
-          DevPulse Portal · simulated demo data · no live services connected
-        </footer>
       </main>
 
+      {/* Floating Command Console */}
       <CommandConsole onSubmit={handleSubmit} onReset={handleReset} processing={processing} />
+
+      {/* Polished Glassmorphism Footer */}
+      <footer className="fixed bottom-0 left-0 right-0 z-20 border-t border-white/[0.06] bg-[#090A0F]/85 backdrop-blur-xl px-4 py-2.5 sm:px-6">
+        <div className="mx-auto max-w-[1400px] flex items-center justify-between gap-4 text-[11px] font-medium text-slate-400">
+          <div className="flex items-center gap-2">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-neon-green animate-pulse" />
+            <span className="font-mono text-[11px]">DevPulse Portal · JC&E · All systems operational</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 text-slate-400 transition-colors hover:text-lavender" aria-hidden="true">
+              <Mic className="h-3.5 w-3.5 text-lavender" />
+              <span className="font-mono text-[11px]">Voice Simulated</span>
+            </span>
+            <span className="flex items-center gap-1.5 text-slate-400 transition-colors hover:text-neon-green" aria-hidden="true">
+              <Radio className="h-3.5 w-3.5 text-neon-green" />
+              <span className="font-mono text-[11px]">MCP Ready</span>
+            </span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
 
 export default App;
+

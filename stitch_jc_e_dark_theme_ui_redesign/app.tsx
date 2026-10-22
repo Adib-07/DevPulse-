@@ -116,7 +116,7 @@ export default function App() {
           return nextState;
         });
       }
-    } catch (error) {
+    } catch {
       updateVoiceInteraction(interactionId, {
         assistantResponse: 'An unexpected error occurred during command processing. Please try again.',
         action: 'UNKNOWN',

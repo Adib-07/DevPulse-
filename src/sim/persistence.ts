@@ -23,12 +23,15 @@ interface InteractionRow {
 // Supabase query builders are thenables but not full Promises, so callers
 // wrap them with Promise.resolve() to satisfy the Promise<T> contract.
 function withTimeout<T>(p: Promise<T>, ms = 4000, label = 'operation'): Promise<T> {
-  return Promise.race([
-    p,
-    new Promise<T>((_, reject) =>
-      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms),
-    ),
-  ]);
+  let timerId: ReturnType<typeof setTimeout> | undefined;
+  const timeoutPromise = new Promise<T>((_, reject) => {
+    timerId = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+  });
+  return Promise.race([p, timeoutPromise]).finally(() => {
+    if (timerId !== undefined) {
+      clearTimeout(timerId);
+    }
+  });
 }
 
 export async function loadHistory(): Promise<VoiceInteraction[]> {

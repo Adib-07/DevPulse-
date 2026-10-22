@@ -7,24 +7,27 @@ import { MOCK_TASKS, MOCK_REPO } from './mockData';
 // network call that resolves the same `CommandResult` shape.
 
 const TASK_PATTERNS = [
-  /alexa,?\s+(get|fetch|show|list)\s+(my\s+)?(assigned\s+)?(tasks?|bugs?|sprint)/i,
-  /(get|fetch|show|list)\s+my\s+(assigned\s+)?(tasks?|bugs?)/i,
-  /show\s+my\s+assigned\s+bugs/i,
+  /^(alexa,?\s+)?(get|fetch|show|list)\s+(my\s+)?(assigned\s+)?(tasks?|bugs?|sprint)/i,
+  /^(alexa,?\s+)?(show|get|fetch|list)\s+(my\s+)?assigned\s+(tasks?|bugs?)/i,
+  /^(alexa,?\s+)?assigned\s+tasks?/i,
 ];
 
 const REPO_PATTERNS = [
-  /alexa,?\s+(check|show|fetch)\s+(repository|repo|github|git)\s+status/i,
-  /alexa,?\s+fetch\s+open\s+pr'?s?/i,
-  /check\s+github\s+status/i,
-  /show\s+(repository|repo)\s+health/i,
+  /^(alexa,?\s+)?(check|show|fetch)\s+(repository|repo|github|git)\s+status/i,
+  /^(alexa,?\s+)?fetch\s+open\s+pr'?s?/i,
+  /^(alexa,?\s+)?(check|show)\s+(github|repo|repository)\s+status/i,
+  /^(alexa,?\s+)?show\s+(repository|repo)\s+health/i,
+  /^(alexa,?\s+)?(git|repo|repository)\s+status/i,
 ];
 
 const GUARDRAIL_PATTERNS = [
-  /alexa,?\s+run\s+guardrail\s+check/i,
-  /alexa,?\s+check\s+system\s+security/i,
-  /run\s+security\s+check/i,
-  /verify\s+system\s+safety/i,
+  /^(alexa,?\s+)?run\s+guardrail\s+check/i,
+  /^(alexa,?\s+)?check\s+system\s+security/i,
+  /^(alexa,?\s+)?run\s+security\s+check/i,
+  /^(alexa,?\s+)?verify\s+system\s+safety/i,
+  /^(alexa,?\s+)?guardrail\s+check/i,
 ];
+
 
 const normalize = (raw: string): string => raw.trim().replace(/\s+/g, ' ');
 

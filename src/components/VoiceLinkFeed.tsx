@@ -11,39 +11,42 @@ function formatTime(ts: number): string {
 
 export function VoiceLinkFeed({
   interactions,
-  processing,
+  processing = false,
+  isProcessing,
+  currentWaveformLevel = 0,
 }: {
   interactions: VoiceInteraction[];
-  processing: boolean;
+  processing?: boolean;
+  isProcessing?: boolean;
+  currentWaveformLevel?: number;
 }) {
+  const isBusy = isProcessing ?? processing;
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = scrollRef.current;
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-  }, [interactions.length, processing]);
-
-  const last = interactions[interactions.length - 1];
+  }, [interactions.length, isBusy]);
 
   return (
-    <Card accent="violet" className="shadow-violet-glow">
+    <Card accent="violet" className="shadow-violet-glow border-white/[0.08] bg-[#161821]/80 backdrop-blur-xl">
       <CardHeader
-        icon={<Mic className="h-5 w-5 text-violet-bright" />}
+        icon={<Mic className="h-5 w-5 text-lavender" />}
         title="Alexa+ Voice Link Feed"
         meta="voice → MCP · simulated"
         right={
           <div className="flex items-center gap-2 text-xs text-slate-400">
-            <Dot tone={processing ? 'amber' : 'green'} pulse={processing} />
-            <span className="hidden sm:inline">{processing ? 'Processing' : 'Listening'}</span>
+            <Dot tone={isBusy ? 'amber' : 'green'} pulse={isBusy} />
+            <span className="hidden sm:inline font-mono text-[11px] uppercase tracking-wider">{isBusy ? 'Processing' : 'Listening'}</span>
           </div>
         }
       />
 
       <div className="px-5 py-4 space-y-4">
         {/* Mic + waveform stage */}
-        <div className="flex items-center gap-4 rounded-xl bg-ink-raised/60 border border-ink-border/70 px-4 py-3">
+        <div className="flex items-center gap-4 rounded-xl bg-[#111319]/70 border border-white/[0.06] px-4 py-3">
           <div className="relative grid place-items-center h-12 w-12 shrink-0">
-            {processing && (
+            {isBusy && (
               <span className="absolute inline-flex h-full w-full rounded-full bg-violet/40 animate-pulse-ring" />
             )}
             <span className="relative grid place-items-center h-12 w-12 rounded-full bg-gradient-to-br from-violet to-indigo-deep text-white shadow-violet-glow">
@@ -51,12 +54,13 @@ export function VoiceLinkFeed({
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <Waveform active={processing} bars={28} />
+            <Waveform active={isBusy} level={currentWaveformLevel} bars={28} />
           </div>
           <span className="hidden sm:inline text-[11px] font-mono uppercase tracking-widest text-slate-500">
-            {processing ? 'simulate' : 'idle'}
+            {isBusy ? 'simulate' : 'idle'}
           </span>
         </div>
+
 
         {/* Conversation transcript */}
         <div
@@ -109,13 +113,13 @@ export function VoiceLinkFeed({
             </div>
           ))}
 
-          {processing && (
-            <div className="flex gap-2.5">
-              <span className="mt-0.5 grid place-items-center h-6 w-6 shrink-0 rounded-md bg-violet/15 border border-violet/30 text-violet-bright">
+          {isBusy && (
+            <div className="flex gap-2.5 animate-pulse-subtle">
+              <span className="mt-0.5 grid place-items-center h-6 w-6 shrink-0 rounded-md bg-violet/15 border border-violet/30 text-lavender">
                 <Bot className="h-3.5 w-3.5" />
               </span>
               <div className="flex items-center gap-2 text-sm text-slate-400">
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin text-lavender" />
                 Routing command through MCP…
               </div>
             </div>
