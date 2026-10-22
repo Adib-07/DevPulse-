@@ -19,5 +19,11 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
 .env
+.env.*
+!.env.example
+*.local
+
+coverage
+.vite
+
