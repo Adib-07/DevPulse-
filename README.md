@@ -5,13 +5,14 @@
 **A Voice-Driven Developer Operations Portal & Model Context Protocol (MCP) Server**
 
 [![CI Status](https://github.com/Adib-07/DevPulse-/actions/workflows/ci.yml/badge.svg)](https://github.com/Adib-07/DevPulse-/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/Tests-23%20Passed-10B981?style=flat&logo=vitest&logoColor=white)](https://github.com/Adib-07/DevPulse-)
+[![Tests](https://img.shields.io/badge/Tests-15%20Passed-10B981?style=flat&logo=node.js&logoColor=white)](https://github.com/Adib-07/DevPulse-)
+[![Next.js](https://img.shields.io/badge/Next.js-16.4-000000?style=flat&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19.2-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
+[![Gemini AI](https://img.shields.io/badge/Gemini_AI-2.5_Flash-8E75B2?style=flat&logo=google-gemini&logoColor=white)](https://aistudio.google.com/)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat&logo=python&logoColor=white)](https://python.org/)
 [![MCP](https://img.shields.io/badge/Protocol-MCP%20v2-8B5CF6?style=flat)](https://modelcontextprotocol.io/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-11.17-F69220?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io/)
 
 [Key Features](#key-features) • [System Architecture](#system-architecture) • [Demo Walkthrough](#project-demonstration) • [Getting Started](#getting-started) • [Python MCP Server](#python-mcp-server-reference) • [Documentation](docs/architecture.md)
 
@@ -253,7 +254,7 @@ Follow this 5-step demonstration sequence to evaluate DevPulse:
 
 ### Prerequisites
 * **Node.js:** v18.0.0 or higher (v20+ recommended)
-* **npm:** v9.0.0 or higher
+* **pnpm:** v9.0.0+ (recommended: `pnpm@11.17+`) or npm v9.0.0+
 * **Python:** v3.11 or higher (for the MCP server)
 * **Git:** v2.30+
 
@@ -267,30 +268,32 @@ Follow this 5-step demonstration sequence to evaluate DevPulse:
 
 2. **Install frontend dependencies:**
    ```bash
-   npm install
+   pnpm install
    ```
 
 3. **Configure Environment (Optional):**
    ```bash
-   cp .env.example .env
+   cp .env.example .env.local
+   # Set GEMINI_API_KEY for the live Google Gemini voice assistant (/api/assistant)
    ```
-   *Note: DevPulse runs fully without credentials using its built-in in-memory fallback.*
+   *Note: DevPulse dashboard runs fully in demo mode out of the box.*
 
-4. **Start the local development server:**
+4. **Start the local Next.js development server:**
    ```bash
-   npm run dev
+   pnpm dev
    ```
-   Open [http://localhost:5173](http://localhost:5173) in your browser.
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 5. **Run the automated test suite:**
    ```bash
-   npm test
+   pnpm test
    ```
 
-6. **Create a production build:**
+6. **Validate TypeScript & create a production build:**
    ```bash
-   npm run build
-   npm run preview
+   pnpm typecheck
+   pnpm build
+   pnpm start
    ```
 
 ---
@@ -419,34 +422,44 @@ erDiagram
 
 ## 15. Testing & Quality Assurance
 
-DevPulse maintains a **100% test pass rate** using Vitest:
+DevPulse maintains automated test suites covering API routes, data contracts, command engine intents, and styling utilities:
 
 ```bash
 # Run unit & regression test suites
-npm test
+pnpm test
 
 # Run static type checking
-npm run typecheck
-
-# Run linter
-npm run lint
+pnpm typecheck
 
 # Compile production build
-npm run build
+pnpm build
 ```
 
 ### Verified Test Results
 
 ```
- ✓ src/components/regression.test.ts (4 tests)
- ✓ src/sim/commandEngine.test.ts (13 tests)
- ✓ src/sim/persistence.test.ts (6 tests)
+▶ Assistant API Route Handler (5 tests)
+  ✔ GET returns online status and endpoint metadata
+  ✔ POST rejects non-JSON or invalid request bodies
+  ✔ POST rejects empty or missing command string
+  ✔ POST rejects commands exceeding maximum character length
+  ✔ POST returns 503 when Gemini API key is unconfigured
+▶ Data Contracts & Integrity Tests (3 tests)
+  ✔ tasks.json matches schema and has valid developer sprint items
+  ✔ github.json matches schema and has valid repository telemetry
+  ✔ alerts.json matches schema and contains active system alerts and service telemetry
+▶ Voice Command Engine Intent Classification (5 tests)
+  ✔ correctly handles wake words and filters critical tasks
+  ✔ handles shorthand developer commands without wake word
+  ✔ correctly routes repository health inquiries
+  ✔ correctly routes alert queries
+  ✔ correctly routes reset and clear requests
+▶ Utility Functions (2 tests)
+  ✔ cn merges classes and resolves tailwind conflicts
+  ✔ cn handles complex conditional expressions
 
- Test Files  3 passed (3)
-      Tests  23 passed (23)
-   Duration  154ms
+Pass: 15/15 tests across 4 suites (101ms)
 ```
-
 ---
 
 ## 16. Security
