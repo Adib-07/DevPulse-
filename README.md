@@ -2,16 +2,18 @@
 
 <div align="center">
 
-**A Voice-Driven Developer Operations Portal Powered by the Model Context Protocol (MCP) Pattern**
+**A Voice-Driven Developer Operations Portal & Model Context Protocol (MCP) Server**
 
 [![CI Status](https://github.com/Adib-07/DevPulse-/actions/workflows/ci.yml/badge.svg)](https://github.com/Adib-07/DevPulse-/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/Tests-23%20Passed-10B981?style=flat&logo=vitest&logoColor=white)](https://github.com/Adib-07/DevPulse-)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat&logo=python&logoColor=white)](https://python.org/)
+[![MCP](https://img.shields.io/badge/Protocol-MCP%20v2-8B5CF6?style=flat)](https://modelcontextprotocol.io/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-7.3-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
 
-[Features](#key-features) • [System Architecture](#system-architecture) • [Demo Walkthrough](#project-demonstration) • [Getting Started](#getting-started) • [Documentation](docs/architecture.md)
+[Key Features](#key-features) • [System Architecture](#system-architecture) • [Demo Walkthrough](#project-demonstration) • [Getting Started](#getting-started) • [Python MCP Server](#python-mcp-server-reference) • [Documentation](docs/architecture.md)
 
 </div>
 
@@ -19,16 +21,18 @@
 
 ## 1. Project Overview
 
-**DevPulse** is a high-output developer portal engineered to eliminate context switching during standups, release reviews, and incident triage. Inspired by an Alexa+-style voice assistant and patterned after Anthropic's **Model Context Protocol (MCP)**, DevPulse aggregates sprint tickets, CI/CD pull request telemetry, and infrastructure observability into a single hands-free developer cockpit.
+**DevPulse** is a dual-tier developer operations system engineered to eliminate cognitive overload and context switching during standups, release reviews, and incident triage.
 
-Built on an engineering-grade **Obsidian Pulse** glassmorphic dark theme, DevPulse delivers glanceable situational awareness. Developers can execute simulated voice commands to retrieve active sprint blockers, audit failing GitHub Actions pipelines, and run automated security guardrails that clear active operational alerts.
+DevPulse unifies developer workflows through two complementary components:
+1. **Frontend Operations Portal:** An engineering-grade React 18 / TypeScript / Tailwind CSS web application built on the **Obsidian Pulse** glassmorphic dark theme. It features an Alexa+-style voice command interface with real-time audio waveform simulation, dynamic triage cards, and dual-mode persistence.
+2. **Backend Model Context Protocol (MCP) Server:** A Python implementation utilizing the official `mcp` SDK (`mcp[cli]>=2.0,<3`) exposing developer operational tools (`get_assigned_tasks`, `get_repo_alerts`, `trigger_code_review`) over standard stdio transport for direct integration with MCP-compatible clients and the official MCP Inspector.
 
 ---
 
 ## 2. Visual Project Preview
 
 ### Active Dashboard & Real-Time Voice Link Feed
-The active dashboard displays live sprint tickets, CI/CD repository status, API latency telemetry, and the real-time voice link interaction feed with dynamic audio-reactive waveform modulation.
+The active dashboard displays live sprint tickets, CI/CD pull request status, API latency telemetry, and the real-time voice link interaction feed with dynamic audio-reactive waveform modulation.
 
 ![DevPulse Active Dashboard](docs/assets/screenshots/devpulse-voice-feed-active.png)
 *Figure 1: DevPulse active workspace showing hydrated sprint tickets (`DEV-101`), failing pull request CI details (`PR #247`), operational latency telemetry with SVG Sparklines, and the voice command transcript.*
@@ -61,20 +65,21 @@ Modern software engineers waste up to **23 minutes refocusing** after each inter
 * **CI/CD Pipelines (GitHub / Azure DevOps):** Identifying why a PR is failing requires digging through verbose build logs.
 * **Observability (Datadog / Prometheus / Azure Monitor):** Latency spikes and degraded microservices live in separate infrastructure graphs.
 
-**DevPulse eliminates this fragmentation** by providing a unified, hands-free conversational interface that surfaces critical sprint blockers, repository health, and system security telemetry on demand.
+**DevPulse eliminates this fragmentation** by providing a unified, hands-free conversational interface and standardized MCP server that surfaces critical sprint blockers, repository health, and system security telemetry on demand.
 
 ---
 
 ## 4. Solution Overview
 
-DevPulse unifies the developer experience through three core pillars:
+DevPulse bridges developer operations through three core capabilities:
 
-1. **Conversational Command Dispatcher:** Accepts natural voice prompts (or developer shorthand) to query engineering tools without opening multiple browser tabs.
+1. **Voice-Driven & Shorthand Command Dispatcher:** Accepts natural voice prompts (or developer shorthand) to query engineering tools without opening multiple browser tabs.
 2. **Tri-Domain Operational Cockpit:**
    * **Sprint Criticals:** Highlights high-severity blockers with pulsing radar indicators.
    * **Git Pulse:** Alerts engineers to failing CI steps on open pull requests.
    * **Ops Sentinel:** Tracks API latency trends and microservice states.
-3. **Resilient Dual-Mode Architecture:** Operates 100% out of the box in local in-memory mode, with automatic upgrade to Supabase cloud persistence and chronological state replay when credentials are configured.
+3. **Official MCP Tool Integration:** Provides a standalone Python MCP server (`server.py`) compliant with the Model Context Protocol v2, exposing structured tools to AI assistants (Claude, Copilot, Cursor).
+4. **Resilient Dual-Mode Persistence:** Operates 100% out of the box in local in-memory mode, with automatic upgrade to Supabase cloud persistence and chronological state replay when credentials are configured.
 
 ---
 
@@ -87,7 +92,8 @@ DevPulse unifies the developer experience through three core pillars:
 | **Issue Triage** | **Sprint Criticals** | Categorized ticket priorities (`CRITICAL`, `HIGH`, `MEDIUM`), critical pulsing radar ring, assignee tags. | **Implemented** |
 | **CI/CD Telemetry** | **Git Pulse** | Build failure alert shake animation, PR branch and author details, commit hash tracking. | **Implemented** |
 | **Observability** | **Ops Sentinel** | Live API latency gauge, dynamic SVG Sparkline history, microservice health list, security clearance sweep banner. | **Implemented** |
-| **Protocol Pattern** | **MCP Domain Simulation** | Typed tool dispatching (`FETCH_TASKS`, `CHECK_REPO`, `RUN_GUARDRAIL`) structured for zero-refactor MCP daemon integration. | **Implemented** |
+| **Python MCP Server** | **Standardized MCP Tools** | `get_assigned_tasks`, `get_repo_alerts`, and `trigger_code_review` tools implemented with official `mcp` Python SDK v2. | **Implemented** |
+| **Sample Data** | **Structured JSON Datasets** | `tasks.json`, `github.json`, and `alerts.json` schemas loaded via `data_loader.py`. | **Implemented** |
 | **Persistence** | **Supabase State Replay** | Asynchronous cloud storage with 4000ms timeout protection (`withTimeout`) and sequential state replay on mount. | **Implemented** |
 | **Quality** | **Vitest Automated Suite** | 23 unit and regression tests covering command parsing, replay reducers, and data integrity. | **Implemented** |
 
@@ -95,11 +101,11 @@ DevPulse unifies the developer experience through three core pillars:
 
 ## 6. System Architecture
 
-DevPulse employs a modular, decoupled architecture separating the presentation layer from domain logic and persistence:
+DevPulse employs a modular, dual-tier architecture:
 
 ```mermaid
 flowchart TD
-    subgraph Client["Presentation Layer (React 18 + Vite)"]
+    subgraph Frontend["Frontend Operations Portal (React 18 + TypeScript + Vite)"]
         UI["Obsidian Pulse Design Canvas"]
         Console["FloatingCommandConsole<br/>(Voice & Text Dispatcher)"]
         Feed["VoiceLinkFeed<br/>(Waveform & Transcript)"]
@@ -109,30 +115,39 @@ flowchart TD
             Git["GitPulse<br/>(CI/CD Health)"]
             Ops["OpsSentinel<br/>(System Telemetry)"]
         end
-    end
-
-    subgraph CoreEngine["Simulation & Protocol Layer"]
+        
         Engine["commandEngine.ts<br/>(Intent Classifier)"]
-        Types["types.ts<br/>(Typed MCP Contracts)"]
-        Replay["persistence.ts<br/>(replayHistory() Reducer)"]
+        Replay["persistence.ts<br/>(State Replay)"]
     end
 
-    subgraph Storage["Persistence Options"]
+    subgraph BackendMCP["Backend MCP Server (Python 3.11+ / mcp[cli] v2)"]
+        Server["server.py<br/>(MCPServer 'DevPulse MCP')"]
+        Loader["data_loader.py<br/>(JSON Data Access Layer)"]
+        
+        subgraph Datasets["Sample JSON Contracts"]
+            TasksJSON["tasks.json<br/>(Bugs & Tasks)"]
+            GithubJSON["github.json<br/>(PRs & CI Checks)"]
+            AlertsJSON["alerts.json<br/>(Service Telemetry)"]
+        end
+    end
+
+    subgraph Storage["Cloud Persistence Option"]
         SupabaseClient["supabaseClient.ts"]
         DB[("Supabase PostgreSQL<br/>voice_interactions")]
-        Memory[("Local Memory Fallback<br/>(Zero-Config)")]
     end
 
-    UI --> Console
     Console -->|Raw Command| Engine
-    Engine -->|Normalized Regex| Types
     Engine -->|CommandResult| Replay
     Replay -->|State Hydration| Panels
     Engine -->|Transcript Record| Feed
 
     Replay -.->|async saveInteraction()| SupabaseClient
     SupabaseClient -->|withTimeout 4000ms| DB
-    SupabaseClient -.->|No Credentials| Memory
+
+    Server --> Loader
+    Loader --> TasksJSON
+    Loader --> GithubJSON
+    Loader --> AlertsJSON
 ```
 
 *For an in-depth breakdown of components and data contracts, see [docs/architecture.md](docs/architecture.md).*
@@ -171,11 +186,13 @@ sequenceDiagram
 | Layer | Technology | Version | Purpose |
 | :--- | :--- | :--- | :--- |
 | **Frontend Framework** | **React** | `18.3.1` | Component-based UI with declarative state and custom hooks |
-| **Language** | **TypeScript** | `5.6.3` | Type-safe domain models, MCP payload contracts, and compile-time verification |
+| **Frontend Language** | **TypeScript** | `5.6.3` | Type-safe domain models, MCP payload contracts, and compile-time verification |
 | **Build Tooling** | **Vite** | `7.3.7` | Fast hot module replacement (HMR) and optimized rollup production bundles |
 | **Styling** | **Tailwind CSS** | `3.4.1` | Utility-first styling implementing the Obsidian Pulse dark theme |
 | **PostCSS** | **Autoprefixer / PostCSS** | `8.4.35` | Vendor prefixing and cross-browser CSS compilation |
 | **Iconography** | **Lucide React** | `0.446.0` | Consistent, accessible SVG iconography |
+| **MCP Server** | **Python** | `3.11+` | Backend runtime for Model Context Protocol tools |
+| **MCP SDK** | **mcp[cli]** | `>=2.0,<3` | Official Model Context Protocol Python SDK v2 with dev CLI |
 | **Database Client** | **Supabase JS** | `2.57.4` | PostgreSQL persistence with Row-Level Security for interaction history |
 | **Testing** | **Vitest** | `5.0.5` | Zero-config unit and regression test runner matching Vite configuration |
 | **Code Quality** | **ESLint** | `9.9.1` | Static analysis and TypeScript code standard enforcement |
@@ -186,11 +203,11 @@ sequenceDiagram
 
 ### Hackathon Evaluation Quick Reference
 
-* **Project Name:** DevPulse Portal
+* **Project Name:** DevPulse Portal & MCP Server
 * **Target Audience:** Software Engineering teams, DevOps/SRE specialists, and technical leads.
 * **Core Technical Innovation:** Combines conversational AI voice ergonomics (Alexa+ paradigm) with the typed **Model Context Protocol (MCP)** tool dispatch pattern to unify developer triage across issue management, CI/CD, and telemetry.
 * **Demonstration Reliability:** 100% reproducible out of the box with zero required external dependencies or API keys.
-* **Instant Evaluation URL:** Launch locally and append `?demo=active` to immediately view pre-seeded dashboard states:
+* **Instant Evaluation URL:** Launch the frontend locally and append `?demo=active` to immediately view pre-seeded dashboard states:
   ```
   http://localhost:5173/?demo=active
   ```
@@ -200,7 +217,7 @@ sequenceDiagram
 | Evaluation Criteria | DevPulse Implementation |
 | :--- | :--- |
 | **Innovation & Concept** | Applies conversational voice-first interaction to developer operations, moving away from fragmented, click-heavy dashboard navigation. |
-| **Technical Execution** | Fully typed TypeScript contracts, clean state-replay reducers, dynamic audio waveform simulation, and modular architecture structured for live MCP daemon migration. |
+| **Technical Execution** | Fully typed TypeScript contracts, clean state-replay reducers, dynamic audio waveform simulation, and an official Python MCP server (`server.py`). |
 | **Usability & UX Design** | High-contrast Obsidian Pulse dark theme designed according to WCAG 2.1 AAA standards; responsive across mobile and desktop. |
 | **Reliability & Security** | 23 passing Vitest tests, 0 ESLint warnings, 0 TypeScript errors, timeout-guarded async calls, sanitized `.env.example`, and isolated SVG DOM IDs. |
 
@@ -237,9 +254,10 @@ Follow this 5-step demonstration sequence to evaluate DevPulse:
 ### Prerequisites
 * **Node.js:** v18.0.0 or higher (v20+ recommended)
 * **npm:** v9.0.0 or higher
+* **Python:** v3.11 or higher (for the MCP server)
 * **Git:** v2.30+
 
-### Installation & Run
+### Part A: Running the Frontend Operations Portal
 
 1. **Clone the repository:**
    ```bash
@@ -247,7 +265,7 @@ Follow this 5-step demonstration sequence to evaluate DevPulse:
    cd DevPulse-
    ```
 
-2. **Install dependencies:**
+2. **Install frontend dependencies:**
    ```bash
    npm install
    ```
@@ -274,6 +292,38 @@ Follow this 5-step demonstration sequence to evaluate DevPulse:
    npm run build
    npm run preview
    ```
+
+---
+
+### Part B: Running the Python MCP Server
+
+The repository includes a standalone Model Context Protocol server exposing developer tools over stdio:
+
+1. **Create and activate a virtual environment:**
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+2. **Install MCP dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the MCP server directly:**
+   ```bash
+   python server.py
+   ```
+   *(The server runs over stdio and waits quietly for an MCP client).*
+
+4. **Interactive testing with the official MCP Inspector:**
+   ```bash
+   mcp dev server.py
+   ```
+   The Inspector opens a local web interface where you can test the three exposed tools:
+   * `get_assigned_tasks`: Returns formatted list of sprint tickets from `tasks.json`.
+   * `get_repo_alerts`: Returns open pull requests, CI test results, and monitoring alerts from `github.json` and `alerts.json`.
+   * `trigger_code_review`: Simulates queuing a safe code review.
 
 ---
 
@@ -326,6 +376,13 @@ DevPulse-/
 │   └── main.tsx                 # React entry point
 ├── supabase/
 │   └── migrations/              # PostgreSQL schema & Row-Level Security SQL
+├── alerts.json                  # Sample monitoring telemetry dataset
+├── github.json                  # Sample pull request & CI status dataset
+├── tasks.json                   # Sample developer issue tickets dataset
+├── data_loader.py               # Python JSON reader & validation module
+├── server.py                    # Official Python MCP server implementation
+├── requirements.txt             # Python dependencies (mcp[cli]>=2.0,<3)
+├── AGENTS.md                    # Guidelines for autonomous coding agents
 ├── .env.example                 # Safe environment variable template
 ├── CONTRIBUTING.md              # Contributor guide and PR checklist
 ├── IMPLEMENTATION_CHECKLIST.md  # Comprehensive engineering audit checklist
@@ -402,7 +459,7 @@ npm run build
 
 ## 17. Deployment
 
-DevPulse is structured as an optimized static SPA compatible with:
+DevPulse Frontend is structured as an optimized static SPA compatible with:
 * **Azure Static Web Apps**
 * **Vercel**
 * **Netlify**
@@ -430,13 +487,15 @@ Official participation certificates, judging milestones, and verified awards wil
   - [x] Sprint, Git, and Ops dashboard cockpit panels.
   - [x] Dual-mode local memory and Supabase persistence.
   - [x] Automated Vitest test suite and CI pipeline.
-- [ ] **Phase 2: Live Protocol & Integrations**
-  - [ ] Real-time Model Context Protocol (MCP) WebSocket / SSE daemon connection.
+- [x] **Phase 2: Standardized MCP Server**
+  - [x] Python `server.py` implementation with official `mcp` SDK v2.
+  - [x] Developer data contracts (`tasks.json`, `github.json`, `alerts.json`).
+  - [x] Compatibility with official MCP Inspector CLI (`mcp dev server.py`).
+- [ ] **Phase 3: Live Protocol Integration**
   - [ ] Web Speech API browser microphone voice capture.
+  - [ ] Direct WebSocket transport between React UI and Python MCP server.
   - [ ] GitHub REST/GraphQL live PR and workflow dispatch integration.
-- [ ] **Phase 3: Enterprise & Multi-Tenancy**
   - [ ] Azure Monitor / Application Insights live telemetry webhook ingestion.
-  - [ ] GitHub OAuth & multi-tenant user workspace profiles.
 
 ---
 
