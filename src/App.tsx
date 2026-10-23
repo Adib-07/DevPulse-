@@ -58,8 +58,40 @@ function App() {
     let cancelled = false;
     (async () => {
       try {
-        const history = await loadHistory();
+        let history = await loadHistory();
         if (cancelled) return;
+
+        // Support '?demo=active' query parameter for live hackathon presentations and instant inspection
+        const params = new URLSearchParams(window.location.search);
+        if (history.length === 0 && (params.get('demo') === 'active' || params.get('populated') === 'true')) {
+          history = [
+            {
+              id: 'demo-seed-1',
+              timestamp: Date.now() - 150000,
+              command: 'Alexa, get assigned tasks',
+              response: processCommand('Alexa, get assigned tasks').response,
+              commandId: 'FETCH_TASKS',
+              status: 'ok',
+            },
+            {
+              id: 'demo-seed-2',
+              timestamp: Date.now() - 80000,
+              command: 'Alexa, check repository status',
+              response: processCommand('Alexa, check repository status').response,
+              commandId: 'CHECK_REPO',
+              status: 'ok',
+            },
+            {
+              id: 'demo-seed-3',
+              timestamp: Date.now() - 20000,
+              command: 'Alexa, run guardrail check',
+              response: processCommand('Alexa, run guardrail check').response,
+              commandId: 'RUN_GUARDRAIL',
+              status: 'ok',
+            },
+          ];
+        }
+
         // Merge saved history with any interactions the user already issued
         // while loading was in flight, so a slow load never clobbers live input.
         setInteractions((prev) => [...history, ...prev]);
