@@ -12,9 +12,29 @@
 [![Protocol](https://img.shields.io/badge/Protocol-MCP%202025--11--25-8B5CF6?style=flat)](https://modelcontextprotocol.io/)
 [![Deployment](https://img.shields.io/badge/Live%20Demo-dev--pulse--wine--eta.vercel.app-000000?style=flat&logo=vercel&logoColor=white)](https://dev-pulse-wine-eta.vercel.app/)
 
-[Live Demo](https://dev-pulse-wine-eta.vercel.app/) • [GitHub Repository](https://github.com/Adib-07/DevPulse-) • [System Architecture](#system-architecture) • [MCP Protocol & Tools](#mcp-protocol--tools) • [Quickstart Runbook](#quick-start) • [Verification & Tests](#testing-and-quality)
+**Live Demo:** [https://dev-pulse-wine-eta.vercel.app/](https://dev-pulse-wine-eta.vercel.app/) • [GitHub Repository](https://github.com/Adib-07/DevPulse-)
 
 </div>
+
+---
+
+## 🚀 Live Demo
+**Try DevPulse MCP:** [Open Live Application](https://dev-pulse-wine-eta.vercel.app/)
+
+Explore the deployed application and test the features currently available. Evaluators can test natural-language developer commands, inspect real-time Model Context Protocol (MCP) tool execution traces, and navigate developer telemetry without requiring pre-configured API keys.
+
+* **Canonical Live Deployment:** [https://dev-pulse-wine-eta.vercel.app/](https://dev-pulse-wine-eta.vercel.app/)
+* **Public MCP Endpoint:** [https://dev-pulse-wine-eta.vercel.app/api/mcp](https://dev-pulse-wine-eta.vercel.app/api/mcp)
+* **Assistant Endpoint:** [https://dev-pulse-wine-eta.vercel.app/api/assistant](https://dev-pulse-wine-eta.vercel.app/api/assistant)
+
+### How Evaluators Can Test the Live Application
+1. Open [https://dev-pulse-wine-eta.vercel.app/](https://dev-pulse-wine-eta.vercel.app/) in any modern browser.
+2. Click any of the quick demonstration chips (e.g. *"What are my two highest-priority open bugs?"* or *"Which pull requests need my attention?"*).
+3. Observe:
+   - The assistant answers with exact ticket identifiers and links.
+   - The **Visible MCP Execution Trace** card immediately displays the tool name (`get_my_high_priority_bugs`), validated arguments, execution latency (⚡ 16ms), and source references.
+   - Audio synthesis reads the answer aloud.
+4. Click **Settings & Protocols** in the sidebar or header to inspect the MCP server status and click **Test Ping** to test live JSON-RPC 2.0 communication.
 
 ---
 
@@ -57,6 +77,30 @@ DevPulse MCP unifies developer operations into an **Alexa-style conversational H
 
 ---
 
+## 📸 Application Preview
+
+### 1. Active Command Center & Visible MCP Execution Trace
+The central dashboard displays active sprint tickets, system alerts, repository health, and the live MCP Execution Trace showing tool arguments, latency, and source references.
+
+![DevPulse MCP Dashboard](docs/images/devpulse-dashboard.png)
+*Figure 1: DevPulse Command Center running on the Obsidian Pulse dark design system with visible MCP execution trace.*
+
+### 2. Conversational Voice Session & Incident Triage
+When commands are executed, DevPulse renders the conversational transcript, synthesized voice playback, and the live triage feed.
+
+![DevPulse Voice Feed Active](docs/images/devpulse-voice-feed.png)
+*Figure 2: Active DevPulse conversational session showing task triage and natural language response.*
+
+### 3. Mobile Responsive Viewport
+DevPulse maintains touch-target ergonomics, legible telemetry, and collapsible mobile sidebar navigation across viewports as small as 390px width.
+
+<div align="center">
+  <img src="docs/images/devpulse-mobile.png" alt="DevPulse Mobile Layout" width="380" />
+  <p><em>Figure 3: DevPulse responsive layout running on mobile viewport (390px × 844px).</em></p>
+</div>
+
+---
+
 ## Primary Demonstration Walkthrough
 
 ### The Flagship Interaction
@@ -84,30 +128,6 @@ A developer asks:
 * *"Check repository health."* → Invokes `get_repository_health_summary` to compute health score (92/100) and identify failing CI checks.
 * *"Find documentation relevant to this error."* → Invokes `search_technical_documentation` to search MCP and Next.js specifications.
 * *"What should I investigate next?"* → Invokes `recommend_next_action` to prioritize unit test fixes and critical alert triage.
-
----
-
-## Visual Product Showcase
-
-### 1. Active Command Center & Visible MCP Execution Trace
-The central dashboard displays active sprint tickets, system alerts, repository health, and the live MCP Execution Trace showing tool arguments, latency, and source references.
-
-![DevPulse Dashboard Overview](docs/images/devpulse-dashboard.png)
-*Figure 1: DevPulse Command Center running on the Obsidian Pulse dark design system.*
-
-### 2. Conversational Voice Session & Incident Triage
-When commands are executed, DevPulse renders the conversational transcript, synthesized voice playback, and the live triage feed.
-
-![DevPulse Voice Feed Active](docs/images/devpulse-voice-feed.png)
-*Figure 2: Active DevPulse session showing conversation history and live task prioritization.*
-
-### 3. Mobile Responsive Viewport
-DevPulse maintains touch-target ergonomics, legible telemetry, and collapsible mobile sidebar navigation across viewports as small as 390px width.
-
-<div align="center">
-  <img src="docs/images/devpulse-mobile.png" alt="DevPulse Mobile Layout" width="380" />
-  <p><em>Figure 3: DevPulse responsive layout running on mobile viewport (390px × 844px).</em></p>
-</div>
 
 ---
 
@@ -198,23 +218,6 @@ Response Delivery
 | **Package Manager** | pnpm | `11.17.0` | Deterministic lockfile dependency isolation |
 | **Test Runner** | Node.js Native Test Runner | Node 20+ (`node:test`) | 39 automated tests across 7 test suites (169ms) |
 | **Deployment** | Vercel | Production | Serverless Edge routing with Next.js build delegation ([`vercel.json`](vercel.json)) |
-
----
-
-## Live Demo
-
-* **Canonical Live Deployment:** [https://dev-pulse-wine-eta.vercel.app/](https://dev-pulse-wine-eta.vercel.app/)
-* **Public MCP Endpoint:** [https://dev-pulse-wine-eta.vercel.app/api/mcp](https://dev-pulse-wine-eta.vercel.app/api/mcp)
-* **Assistant Endpoint:** [https://dev-pulse-wine-eta.vercel.app/api/assistant](https://dev-pulse-wine-eta.vercel.app/api/assistant)
-
-### How Evaluators Can Test the Live Application
-1. Open [https://dev-pulse-wine-eta.vercel.app/](https://dev-pulse-wine-eta.vercel.app/) in any modern browser.
-2. Click any of the quick demonstration chips (e.g. *"What are my two highest-priority open bugs?"* or *"Which pull requests need my attention?"*).
-3. Observe:
-   - The assistant answers with exact ticket identifiers and links.
-   - The **Visible MCP Execution Trace** card immediately displays the tool name (`get_my_high_priority_bugs`), validated arguments, execution latency (⚡ 16ms), and source references.
-   - Audio synthesis reads the answer aloud.
-4. Click **Settings & Protocols** in the sidebar or header to inspect the MCP server status and click **Test Ping** to test live JSON-RPC 2.0 communication.
 
 ---
 
