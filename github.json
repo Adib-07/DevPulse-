@@ -1,6 +1,11 @@
-
 {
   "source": "Mock GitHub Data",
+  "ci_summary": {
+    "total_tests": 15,
+    "passing_tests": 12,
+    "failing_tests": 3,
+    "status": "12 / 15 passed (3 failing on PR #202)"
+  },
   "pull_requests": [
     {
       "id": 201,

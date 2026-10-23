@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://dev-pulse-wine-eta.vercel.app'),
   title: 'DevPulse — Developer Command Center',
   description: 'A voice-driven command center for your development workspace.',
   generator: 'v0.app',

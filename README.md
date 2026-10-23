@@ -11,6 +11,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Protocol](https://img.shields.io/badge/Protocol-MCP%202025--11--25-8B5CF6?style=flat)](https://modelcontextprotocol.io/)
 [![Deployment](https://img.shields.io/badge/Live%20Demo-dev--pulse--wine--eta.vercel.app-000000?style=flat&logo=vercel&logoColor=white)](https://dev-pulse-wine-eta.vercel.app/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **Live Demo:** [https://dev-pulse-wine-eta.vercel.app/](https://dev-pulse-wine-eta.vercel.app/) • [GitHub Repository](https://github.com/Adib-07/DevPulse-)
 
@@ -27,14 +28,48 @@ Explore the deployed application and test the features currently available. Eval
 * **Public MCP Endpoint:** [https://dev-pulse-wine-eta.vercel.app/api/mcp](https://dev-pulse-wine-eta.vercel.app/api/mcp)
 * **Assistant Endpoint:** [https://dev-pulse-wine-eta.vercel.app/api/assistant](https://dev-pulse-wine-eta.vercel.app/api/assistant)
 
+> [!IMPORTANT]
+> ### 🔍 What's Real vs. Simulated
+> * **Real:** The self-hosted, production MCP server at [`/api/mcp`](https://dev-pulse-wine-eta.vercel.app/api/mcp) (a hand-written JSON-RPC 2.0 handler over Streamable HTTP and SSE; no `@modelcontextprotocol/sdk` npm package dependency), the assistant intent router at `/api/assistant`, and all 7 read-only developer MCP tools.
+> * **Simulated:** The Alexa+ voice experience is simulated in the browser using the browser's native Web Speech API (speech recognition and synthesis). There is **no live Alexa+ cloud account linking** yet.
+> * **Data Modes:** Evaluates in **Demo Fixture Mode** (`tasks.json`, `github.json`, `alerts.json`) by default; live read-only GitHub mode activates only when `GITHUB_TOKEN` and `GITHUB_REPOSITORY` are configured; Google Gemini semantic routing activates only when `GEMINI_API_KEY` is set (otherwise the deterministic pattern router handles all queries offline).
+
 ### How Evaluators Can Test the Live Application
 1. Open [https://dev-pulse-wine-eta.vercel.app/](https://dev-pulse-wine-eta.vercel.app/) in any modern browser.
 2. Click any of the quick demonstration chips (e.g. *"What are my two highest-priority open bugs?"* or *"Which pull requests need my attention?"*).
 3. Observe:
-   - The assistant answers with exact ticket identifiers and links.
-   - The **Visible MCP Execution Trace** card immediately displays the tool name (`get_my_high_priority_bugs`), validated arguments, execution latency (⚡ 16ms), and source references.
+   - The assistant answers with exact ticket identifiers and source references.
+   - The **Visible MCP Execution Trace** card immediately displays the tool name (`get_my_high_priority_bugs`), validated arguments, execution latency (typically a few milliseconds, shown live in the trace card), and source references.
    - Audio synthesis reads the answer aloud.
 4. Click **Settings & Protocols** in the sidebar or header to inspect the MCP server status and click **Test Ping** to test live JSON-RPC 2.0 communication.
+
+---
+
+## 🏆 Hackathon Submission Notes
+
+* **Track:** Alexa+ (Self-hosted MCP server + simulated Alexa+ web client).
+* **Target Repository:** [Adib-07/DevPulse-](https://github.com/Adib-07/DevPulse-)
+* **Canonical Live Deployment:** [https://dev-pulse-wine-eta.vercel.app/](https://dev-pulse-wine-eta.vercel.app/)
+
+### ⏱️ Test It in 60 Seconds
+1. Open the live deployment: [https://dev-pulse-wine-eta.vercel.app/](https://dev-pulse-wine-eta.vercel.app/)
+2. Click the first quick demonstration chip: *"What are my two highest-priority open bugs?"*
+3. Read the **Visible MCP Execution Trace** card showing tool `get_my_high_priority_bugs`, arguments `{ "assignee": "Alex", "limit": 2 }`, live latency in milliseconds, and deterministic ranking of `#BUG-101` and `#BUG-102`.
+4. Open **Settings & Protocols** in the navigation and click **Test Ping** to inspect the live JSON-RPC 2.0 handshake with `/api/mcp`.
+
+### 📅 What Was Built or Significantly Updated During the Hackathon Period (Aug 31 – Oct 23, 2026)
+*All git history in this repository was initiated and developed between October 22, 2026 and October 23, 2026 (100% within the hackathon period; zero commits predate October 22, 2026).*
+
+* **Oct 22, 2026 (`921a992` – `86dae5c`):** Baseline architecture setup; Obsidian Pulse dark UI integration; data contracts and developer schemas (`tasks.json`, `github.json`, `alerts.json`) with Python loader (`data_loader.py`).
+* **Oct 23, 2026 (`28c2ae0` – `f4c7ff6`):** Python MCP server integration (`server.py`); Next.js full-stack portal migration; Vercel serverless deployment recovery ([`vercel.json`](vercel.json)); CI automation ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+* **Oct 23, 2026 (`dfef23e`):** Hand-written TypeScript Streamable HTTP MCP server at `/api/mcp` (supporting `initialize`, `ping`, `tools/list`, `tools/call`, and SSE); 7 core developer MCP tools; deterministic intent routing engine; visible MCP execution trace card; 39 unit, security, and protocol tests.
+* **Oct 23, 2026 (`4e827ed` – `594e2c4`):** Comprehensive hackathon documentation overhaul; official 4:36 narrated demo video (`DevPulse_MCP_Amazon_Hackathon_Demo.mp4`), synchronized subtitle generation (`.srt`), and production pipeline scripts.
+
+### ⚠️ Known Limitations
+* **Alexa+ Account Linking:** There is no live Alexa+ cloud account linking yet. Direct Alexa+ developer console integration requires AWS developer account credentials and OAuth PKCE client registration. The backend is fully prepared via its public Streamable HTTP MCP endpoint at `/api/mcp`.
+* **No Local Filesystem Access:** As a public cloud deployment on Vercel, DevPulse operates in a secure web sandbox. It cannot and does not access a visitor's local filesystem.
+* **Demo Data by Default:** Runs out of the box with seeded demo fixtures (`tasks.json`, `github.json`, `alerts.json`). Live GitHub REST API mode activates only when `GITHUB_TOKEN` and `GITHUB_REPOSITORY` are configured.
+* **Browser Speech Recognition Variance:** Speech recognition relies on the browser's native Web Speech API (`webkitSpeechRecognition`), which varies across browsers (best experienced in Google Chrome / Chromium; falls back gracefully to text input if unsupported).
 
 ---
 
@@ -59,17 +94,17 @@ Software engineers lose significant focus switching between code editors, issue 
 
 ## Solution and Differentiators
 
-DevPulse MCP unifies developer operations into an **Alexa-style conversational HUD** backed by an official **Model Context Protocol (MCP)** server:
+DevPulse MCP unifies developer operations into an **Alexa-style conversational HUD** backed by a **Model Context Protocol (MCP)** server:
 
 * **Conversational HUD (Obsidian Dark Theme):** Web Speech recognition and synthesis allow developers to speak or type requests hands-free during standups or incident triage.
-* **Streamable HTTP MCP Server (`/api/mcp`):** Implements the official **MCP 2025-11-25** specification over HTTP with JSON-RPC 2.0 and Server-Sent Events (SSE), making developer tools discoverable by compatible AI clients (Alexa+, Claude Desktop, Cursor).
+* **Streamable HTTP MCP Server (`/api/mcp`):** Implements the **MCP 2025-11-25** specification over HTTP with a hand-written JSON-RPC 2.0 handler and Server-Sent Events (SSE), making developer tools discoverable by compatible AI clients (Alexa+, Claude Desktop, Cursor).
 * **Visible MCP Execution Trace:** Every query displays a transparent execution card showing:
   - User query asked
   - Selected MCP tool
   - Validated JSON arguments
   - Data source queried (Demo Fixture vs Live GitHub API)
   - Execution duration in milliseconds
-  - Direct links to relevant issues and pull requests
+  - Direct links to repository issues and pull requests
 * **Dual-Mode Data Connector:** Evaluators can run in **Demo Fixture Mode** (reproducible datasets from `tasks.json`, `github.json`, `alerts.json`) or **Live GitHub API Mode** (read-only queries to public repositories like `Adib-07/DevPulse-`).
 * **Zero-Downtime Deterministic Routing:** Core engineering requests execute reliably without external AI API dependencies, while seamlessly integrating Google Gemini 2.5 Flash for semantic refinement when configured.
 
@@ -109,23 +144,23 @@ A developer asks:
 
 1. **Intent Understanding:** DevPulse maps the natural request to the MCP tool `get_my_high_priority_bugs` with arguments `{ "assignee": "Alex", "limit": 2 }`.
 2. **MCP Tool Execution:** Dispatches a typed JSON-RPC 2.0 call to the MCP server.
-3. **Data Retrieval:** Retrieves issue tickets from the active data source (`tasks.json` or live GitHub API).
+3. **Data Retrieval:** Retrieves issue tickets from the active data source (`tasks.json` or live GitHub API). In Demo Fixture Mode, sample tickets link to [`https://github.com/Adib-07/DevPulse-/issues`](https://github.com/Adib-07/DevPulse-/issues).
 4. **Deterministic Ranking Rule:** Ranks tickets by explicit priority weight:  
    $$\text{Critical (rank 1)} > \text{High (rank 2)} > \text{Medium (rank 3)} > \text{Low (rank 4)}$$
 5. **Human-Readable Answer & Voice Synthesis:**
    ```
    Found 2 high-priority bug(s) assigned to Alex (ranked by explicit severity rule: Critical > High > Medium > Low):
-   1. [BUG-101] "Login fails for valid users" — Priority: Critical (Open). Link: https://github.com/Adib-07/DevPulse-/issues/101
-   2. [BUG-102] "Dashboard API returns error" — Priority: High (In Progress). Link: https://github.com/Adib-07/DevPulse-/issues/102
+   1. [BUG-101] "Login fails for valid users" — Priority: Critical (Open). Link: https://github.com/Adib-07/DevPulse-/issues
+   2. [BUG-102] "Dashboard API returns error" — Priority: High (In Progress). Link: https://github.com/Adib-07/DevPulse-/issues
 
    Ranking rationale: Evaluated open issue tickets assigned to Alex; ordered by priority weight and issue identifier.
    ```
-6. **Visible Execution Trace:** Rendered in real-time in the UI showing execution duration (⚡ 14ms), data source provenance, and clickable links to `#BUG-101` and `#BUG-102`.
+6. **Visible Execution Trace:** Rendered in real-time in the UI showing execution duration (typically a few milliseconds, shown live in the trace card), data source provenance, and clickable links to `#BUG-101` and `#BUG-102`.
 
 ### Other Target Interactions
 * *"Which pull requests need my attention?"* → Invokes `list_pull_requests_needing_attention` to flag PR #202 (failing unit tests) and PR #184 (review requested).
 * *"Summarize recent changes in this repository."* → Invokes `summarize_recent_activity` to inspect recent git commits and authors.
-* *"Check repository health."* → Invokes `get_repository_health_summary` to compute health score (92/100) and identify failing CI checks.
+* *"Check repository health."* → Invokes `get_repository_health_summary` to compute health score and identify failing CI checks.
 * *"Find documentation relevant to this error."* → Invokes `search_technical_documentation` to search MCP and Next.js specifications.
 * *"What should I investigate next?"* → Invokes `recommend_next_action` to prioritize unit test fixes and critical alert triage.
 
@@ -136,11 +171,11 @@ A developer asks:
 ### Implemented & Verified
 * **7 Core Developer MCP Tools:** Implemented in TypeScript (`lib/mcp/tools.ts`) and Python (`server.py`) with strict JSON Schema validation.
 * **Visible MCP Execution Trace:** UI card disclosing tool selection, arguments, data source, duration in ms, and clickable source links.
-* **Streamable HTTP MCP Server (`/api/mcp`):** Full MCP 2025-11-25 lifecycle (`initialize`, `ping`, `tools/list`, `tools/call`, SSE streaming, and CORS preflight).
+* **Streamable HTTP MCP Server (`/api/mcp`):** Full MCP 2025-11-25 lifecycle (`initialize`, `ping`, `tools/list`, `tools/call`, SSE streaming, and CORS preflight) implemented via a hand-written JSON-RPC 2.0 handler.
 * **Dual-Mode Data Connector:** Seamless toggle between seeded demo fixtures (`tasks.json`, `github.json`, `alerts.json`) and live read-only GitHub REST API queries.
 * **Offline-Resilient Intent Routing:** Deterministic pattern classifier guarantees zero downtime for core developer queries even without external AI API keys.
 * **Obsidian Pulse HUD:** Interactive Sprint Tasks, Repository Health, Live System Alerts, Pull Requests, Tool Activity Log, and Settings & Protocols Modal.
-* **Python FastMCP Server (`server.py`):** Standalone stdio MCP server for local development and official MCP Inspector testing.
+* **Python MCP Server (`server.py`):** Standalone stdio MCP server using `mcp[cli]>=2.0,<3` for local development and official MCP Inspector testing.
 * **Automated Test Suite:** 39 tests passing across 7 test suites with 0 TypeScript errors.
 
 ### Implemented with Configuration
@@ -179,7 +214,7 @@ Intent Understanding Layer (app/api/assistant/route.ts)
 └──────────────────────────┬─────────────────────────────┘
                            │ JSON-RPC 2.0 tools/call
                            ▼
-Official MCP Server Layer (app/api/mcp/route.ts & server.py)
+MCP Server Layer (app/api/mcp/route.ts & server.py)
 ┌────────────────────────────────────────────────────────┐
 │  • Protocol Version: MCP 2025-11-25
 │  • Lifecycle: initialize, ping, tools/list, tools/call
@@ -212,11 +247,11 @@ Response Delivery
 | **Frontend Framework** | Next.js (App Router) | `16.4.2` | Server rendering, streaming API routes, and client orchestration |
 | **UI Library** | React | `19.2.4` | Component tree with reactive state and concurrent rendering |
 | **Styling & Theme** | Tailwind CSS / Lucide React | `4.3.3` / `1.17.0` | Custom Obsidian pulse palette, glowing borders, and reactive states |
-| **Protocol / Transport** | Model Context Protocol (MCP) | `2025-11-25` | Streamable HTTP endpoint (`/api/mcp`) with JSON-RPC 2.0 & SSE |
-| **Python MCP Server** | Python MCP SDK v2 | `3.11+` / `mcp[cli]` | Standalone stdio MCP server (`server.py`) for Claude Desktop & Cursor |
+| **Protocol / Transport** | Model Context Protocol (MCP) | `2025-11-25` | Hand-written Streamable HTTP endpoint (`/api/mcp`) with JSON-RPC 2.0 & SSE |
+| **Python MCP Server** | Python MCP Package | `3.11+` / `mcp[cli]>=2.0,<3` | Standalone stdio MCP server (`server.py`) for local development and MCP Inspector testing |
 | **AI Routing Engine** | Deterministic + Gemini 2.5 Flash | `@google/genai` `2.30.0` | Zero-downtime deterministic pattern routing with Gemini semantic fallback |
 | **Package Manager** | pnpm | `11.17.0` | Deterministic lockfile dependency isolation |
-| **Test Runner** | Node.js Native Test Runner | Node 20+ (`node:test`) | 39 automated tests across 7 test suites (169ms) |
+| **Test Runner** | Node.js Native Test Runner | Node 20+ (`node:test`) | 39 automated tests across 7 test suites (~150ms) |
 | **Deployment** | Vercel | Production | Serverless Edge routing with Next.js build delegation ([`vercel.json`](vercel.json)) |
 
 ---
@@ -226,7 +261,7 @@ Response Delivery
 ### Prerequisites
 * **Node.js:** `v20.0.0` or higher
 * **pnpm:** `v9.0.0+` (verified on `pnpm@11.17+`)
-* **Python:** `v3.11` or higher (for the Python MCP server)
+* **Python:** `v3.11` or higher (optional, for the Python MCP server)
 
 ---
 
@@ -255,7 +290,7 @@ Response Delivery
    ```
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-5. **Run the 39 automated tests:**
+5. **Run the automated tests:**
    ```bash
    pnpm test
    ```
@@ -311,7 +346,7 @@ Response Delivery
 
 ### Protocol Compatibility
 * **Specification Target:** Model Context Protocol (MCP) `2025-11-25` (backwards-compatible with `2024-11-05`).
-* **Transport:** Streamable HTTP at `/api/mcp` (JSON-RPC 2.0 & SSE) and stdio in `server.py`.
+* **Transport:** Streamable HTTP at `/api/mcp` (hand-written JSON-RPC 2.0 & SSE) and stdio in `server.py`.
 * **CORS:** Configured with `Access-Control-Allow-Origin: *` to allow remote MCP clients and simulators.
 
 ### The 7 Registered Tools
@@ -323,7 +358,7 @@ Response Delivery
 | **C** | `list_pull_requests_needing_attention` | `reason` (all/review_requested/changes_requested/checks_failing) | Evaluates check states; flags PR #202 (failing unit tests) and PR #184 (review requested). |
 | **D** | `summarize_recent_activity` | `limit` (default 5) | Returns factual commit history with short commit hashes (`4e827ed`, `f4c7ff6`) and author timestamps. |
 | **E** | `search_technical_documentation` | `query` *(required string)* | Searches supported documentation (MCP specification, Next.js App Router, GitHub REST). |
-| **F** | `get_repository_health_summary` | *(none)* | Calculates overall repository health score (92/100) based on CI checks and alerts. |
+| **F** | `get_repository_health_summary` | *(none)* | Calculates overall repository health score based on CI checks and alerts. |
 | **G** | `recommend_next_action` | `focusArea` (all/bugs/checks/alerts) | Suggests top read-only engineering investigations with justifications. |
 
 ---
@@ -380,16 +415,16 @@ DevPulse maintains a **100% automated test pass rate** with **zero TypeScript er
   ✔ cn merges classes and resolves tailwind conflicts
   ✔ cn handles complex conditional expressions
 
-Pass: 39/39 tests across 7 suites (169ms)
+Pass: 39/39 tests across 7 suites (~150ms)
 ```
 
-| Verification Check | Command | Status | Result |
+| Verification Check | Command | Status | Real Output |
 | :--- | :--- | :---: | :--- |
-| **TypeScript Static Check** | `pnpm typecheck` | **PASSED** | 0 type errors across all routes and components |
-| **Automated Test Suite** | `pnpm test` | **PASSED** | 39/39 tests passed across 7 test suites |
-| **Next.js Production Build** | `pnpm build` | **PASSED** | Next.js 16.4.2 production bundle compiled in ~720ms |
+| **Automated Test Suite** | `pnpm test` | **PASSED** | 39/39 tests passed across 7 test suites (~150ms) using Node.js native test runner (`node:test`) |
+| **TypeScript Static Check** | `pnpm typecheck` | **PASSED** | 0 type errors across all routes, components, and tools (`tsc --noEmit`) |
+| **Next.js Production Build** | `pnpm build` | **PASSED** | Compiled successfully with Webpack in ~890ms (generated `/`, `/_not-found`, `/api/assistant`, `/api/mcp`) |
 | **Python Syntax Check** | `python3 -m py_compile server.py data_loader.py` | **PASSED** | 0 syntax errors |
-| **Data Loader Pipeline** | `python3 data_loader.py` | **PASSED** | Tasks, PRs, and alert streams loaded cleanly |
+| **Data Loader Pipeline** | `python3 data_loader.py` | **PASSED** | Tasks, PRs, and alert streams loaded and validated cleanly |
 
 ---
 
@@ -412,7 +447,7 @@ Pass: 39/39 tests across 7 suites (169ms)
 
 ## Contribution, License, and Acknowledgements
 
-* **License Status:** No formal `LICENSE` file is currently present in the root checkout. The repository is provided for evaluator inspection under standard Amazon Developer Hackathon evaluation terms.
+* **License Status:** DevPulse MCP is open source software licensed under the **[MIT License](LICENSE)** (Copyright © 2026 Adib Ammar Sunasra).
 * **Contributing:** See [CONTRIBUTING.md](CONTRIBUTING.md) for coding standards and pull request guidelines.
-* **Model Context Protocol:** Built using the open [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) specification.
+* **Model Context Protocol:** Built to comply with the open [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 2025-11-25 specification.
 * **Component Primitives:** Built on [Base UI](https://base-ui.com/) and [Lucide](https://lucide.dev/).

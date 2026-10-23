@@ -15,7 +15,7 @@ export const FIXTURE_TASKS: DeveloperTask[] = [
     assignee: 'Alex',
     description: 'Users cannot log in despite entering the correct password. Auth token issuer mismatch.',
     label: 'backend',
-    url: 'https://github.com/Adib-07/DevPulse-/issues/101',
+    url: 'https://github.com/Adib-07/DevPulse-/issues',
   },
   {
     id: 'BUG-102',
@@ -25,7 +25,7 @@ export const FIXTURE_TASKS: DeveloperTask[] = [
     assignee: 'Alex',
     description: 'Dashboard API fails intermittently with HTTP 500 when fetching unindexed alerts.',
     label: 'api',
-    url: 'https://github.com/Adib-07/DevPulse-/issues/102',
+    url: 'https://github.com/Adib-07/DevPulse-/issues',
   },
   {
     id: 'BUG-103',
@@ -35,7 +35,7 @@ export const FIXTURE_TASKS: DeveloperTask[] = [
     assignee: 'Alex',
     description: 'Some users are not receiving password reset emails due to rate limits on SES.',
     label: 'auth',
-    url: 'https://github.com/Adib-07/DevPulse-/issues/103',
+    url: 'https://github.com/Adib-07/DevPulse-/issues',
   },
   {
     id: 'DEV-241',
@@ -45,7 +45,7 @@ export const FIXTURE_TASKS: DeveloperTask[] = [
     assignee: 'Jordan',
     description: 'Token refresh causes intermittent timeouts when under heavy concurrent load.',
     label: 'backend',
-    url: 'https://github.com/Adib-07/DevPulse-/issues/241',
+    url: 'https://github.com/Adib-07/DevPulse-/issues',
   },
   {
     id: 'DEV-238',
@@ -55,7 +55,7 @@ export const FIXTURE_TASKS: DeveloperTask[] = [
     assignee: 'Alex',
     description: 'p95 latency exceeded 800ms threshold on analytics aggregation queries.',
     label: 'performance',
-    url: 'https://github.com/Adib-07/DevPulse-/issues/238',
+    url: 'https://github.com/Adib-07/DevPulse-/issues',
   },
   {
     id: 'DEV-235',
@@ -65,7 +65,7 @@ export const FIXTURE_TASKS: DeveloperTask[] = [
     assignee: 'Jordan',
     description: '3 regression tests in test_client_state are failing after cache schema migration.',
     label: 'testing',
-    url: 'https://github.com/Adib-07/DevPulse-/issues/235',
+    url: 'https://github.com/Adib-07/DevPulse-/issues',
   },
 ]
 
@@ -77,7 +77,7 @@ export const FIXTURE_PULL_REQUESTS: DeveloperPullRequest[] = [
     status: 'Open',
     reviewStatus: 'Approved',
     checks: { tests: 'Passing', build: 'Passing' },
-    url: 'https://github.com/Adib-07/DevPulse-/pull/201',
+    url: 'https://github.com/Adib-07/DevPulse-/pulls',
   },
   {
     id: 202,
@@ -87,7 +87,7 @@ export const FIXTURE_PULL_REQUESTS: DeveloperPullRequest[] = [
     reviewStatus: 'Changes requested',
     checks: { tests: 'Failing', build: 'Passing' },
     failureReason: '3 unit tests failed: test_auth_retry, test_query_filter, test_cache_ttl',
-    url: 'https://github.com/Adib-07/DevPulse-/pull/202',
+    url: 'https://github.com/Adib-07/DevPulse-/pulls',
   },
   {
     id: 184,
@@ -96,7 +96,7 @@ export const FIXTURE_PULL_REQUESTS: DeveloperPullRequest[] = [
     status: 'Open',
     reviewStatus: 'Review requested',
     checks: { tests: 'Passing', build: 'Passing' },
-    url: 'https://github.com/Adib-07/DevPulse-/pull/184',
+    url: 'https://github.com/Adib-07/DevPulse-/pulls',
   },
 ]
 

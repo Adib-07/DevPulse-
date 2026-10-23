@@ -57,4 +57,12 @@ wheels/
 venv/
 ENV/
 
+# Video production working files
+production/
+scratch/
+scripts/
+*.mp4
+*.srt
+narration_script.md
+
 

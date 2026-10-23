@@ -1037,7 +1037,7 @@ export function DevPulseDashboard() {
                   <RepoStat label="Default branch" value="main" />
                   <RepoStat label="Latest commit" value="4e827ed" />
                   <RepoStat label="Open issues" value="6" />
-                  <RepoStat label="CI checks" value="15 / 15 tests passed" />
+                  <RepoStat label="CI checks" value="12 / 15 passed (PR #202 failing)" />
                 </div>
                 <div className="mt-4 flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[11px] text-zinc-400">
