@@ -200,17 +200,17 @@ sequenceDiagram
 
 ---
 
-## 9. Microsoft Hackathon Presentation
+## 9. Amazon Hackathon Presentation
 
 ### Hackathon Evaluation Quick Reference
 
 * **Project Name:** DevPulse Portal & MCP Server
 * **Target Audience:** Software Engineering teams, DevOps/SRE specialists, and technical leads.
-* **Core Technical Innovation:** Combines conversational AI voice ergonomics (Alexa+ paradigm) with the typed **Model Context Protocol (MCP)** tool dispatch pattern to unify developer triage across issue management, CI/CD, and telemetry.
+* **Core Technical Innovation:** Combines conversational developer voice ergonomics (Alexa-style developer command center) with the typed **Model Context Protocol (MCP)** tool dispatch pattern to unify developer triage across issue management, CI/CD, and telemetry.
 * **Demonstration Reliability:** 100% reproducible out of the box with zero required external dependencies or API keys.
-* **Instant Evaluation URL:** Launch the frontend locally and append `?demo=active` to immediately view pre-seeded dashboard states:
+* **Instant Evaluation URL:** Launch the frontend locally:
   ```
-  http://localhost:5173/?demo=active
+  http://localhost:3000/
   ```
 
 ### Criteria Alignment
@@ -218,11 +218,11 @@ sequenceDiagram
 | Evaluation Criteria | DevPulse Implementation |
 | :--- | :--- |
 | **Innovation & Concept** | Applies conversational voice-first interaction to developer operations, moving away from fragmented, click-heavy dashboard navigation. |
-| **Technical Execution** | Fully typed TypeScript contracts, clean state-replay reducers, dynamic audio waveform simulation, and an official Python MCP server (`server.py`). |
+| **Technical Execution** | Fully typed Next.js 16 App Router contracts, Google Gemini AI route (`/api/assistant`), native test suite, and an official Python MCP server (`server.py`). |
 | **Usability & UX Design** | High-contrast Obsidian Pulse dark theme designed according to WCAG 2.1 AAA standards; responsive across mobile and desktop. |
-| **Reliability & Security** | 23 passing Vitest tests, 0 ESLint warnings, 0 TypeScript errors, timeout-guarded async calls, sanitized `.env.example`, and isolated SVG DOM IDs. |
+| **Reliability & Security** | 15 passing automated tests, 0 TypeScript errors, hardened Gemini prompt injection fencing, timeout-guarded async calls, and sanitized `.env.example`. |
 
-*Disclaimer: DevPulse is an independent open-source project submitted for hackathon evaluation and is not an official Microsoft product.*
+*Disclaimer: DevPulse is an independent open-source project submitted for Amazon hackathon evaluation and is not an official Amazon product.*
 
 ---
 
@@ -472,22 +472,28 @@ Pass: 15/15 tests across 4 suites (101ms)
 
 ## 17. Deployment
 
-DevPulse Frontend is structured as an optimized static SPA compatible with:
-* **Azure Static Web Apps**
-* **Vercel**
-* **Netlify**
-* **Cloudflare Pages**
+DevPulse is fully optimized for **Vercel** as a full-stack Next.js application:
 
-**Build Configuration:**
-* **Build Command:** `npm run build`
-* **Output Directory:** `dist/`
-* **Node Version:** 18.x or 20.x
+* **Platform:** Vercel (Auto-detected via `vercel.json`)
+* **Framework:** Next.js
+* **Build Command:** `pnpm run build`
+* **Install Command:** `pnpm install`
+* **Root Directory:** `.` (Repository root)
+* **Node Version:** 20.x or 22.x
+
+### Deploying to Vercel in 1 Click
+
+1. Connect your repository (`Adib-07/DevPulse-`) in the Vercel Dashboard.
+2. In **Project Settings**, ensure **Root Directory** is set to `.` (the project root).
+3. Under **Environment Variables**, add:
+   * `GEMINI_API_KEY`: *(Optional)* Your Google Gemini API key from AI Studio for live voice command interpretation.
+4. Click **Deploy**. Vercel will install dependencies with pnpm and compile the Next.js production bundle.
 
 ---
 
 ## 18. Certificates, Awards & Achievements
 
-DevPulse is currently an active submission in the **Microsoft Hackathon**. 
+DevPulse is an active submission in the **Amazon Hackathon**. 
 Official participation certificates, judging milestones, and verified awards will be cataloged in this section upon completion of the evaluation cycle.
 
 ---
