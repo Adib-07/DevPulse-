@@ -1,0 +1,2 @@
+# Official MCP Python SDK v2 plus its official development CLI (`mcp dev`).
+mcp[cli]>=2.0,<3
